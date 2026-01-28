@@ -1,42 +1,65 @@
-<script>
-  const WORKER_BASE = "https://square-fog-677a.swaydargument.workers.dev";
-  const WORKER_CHAT_URL = WORKER_BASE + "/chat";
-  const WORKER_HEALTH_URL = WORKER_BASE + "/health";
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI Widget</title>
+  <style>
+    body { font-family: system-ui; padding: 12px; max-width: 900px; }
+    textarea { width: 100%; }
+    pre { white-space: pre-wrap; background:#f6f6f6; padding:12px; border-radius:10px; }
+    button { padding: 8px 12px; }
+  </style>
+</head>
+<body>
+  <h3>DeepSeek test</h3>
+  <textarea id="p" rows="5">Give me a 2-sentence explanation of logos.</textarea>
+  <br><br>
+  <button id="b">Ask</button>
+  <pre id="out"></pre>
 
-  const btn = document.getElementById("b");
-  const out = document.getElementById("out");
-  const input = document.getElementById("p");
+  <script>
+    const WORKER_BASE = "https://square-fog-677a.swaydargument.workers.dev";
+    const WORKER_CHAT_URL = WORKER_BASE + "/chat";
+    const WORKER_HEALTH_URL = WORKER_BASE + "/health";
 
-  // Add a quick health-test button
-  const testBtn = document.createElement("button");
-  testBtn.textContent = "Test /health";
-  testBtn.style.marginLeft = "8px";
-  btn.after(testBtn);
+    const btn = document.getElementById("b");
+    const out = document.getElementById("out");
+    const input = document.getElementById("p");
 
-  testBtn.onclick = async () => {
-    out.textContent = "Testing /health…";
-    try {
-      const r = await fetch(WORKER_HEALTH_URL, { method: "GET" });
-      const text = await r.text();
-      out.textContent = "HEALTH HTTP " + r.status + "\n\n" + text;
-    } catch (e) {
-      out.textContent = "HEALTH failed:\n" + String(e);
-    }
-  };
+    // Add a quick health-test button
+    const testBtn = document.createElement("button");
+    testBtn.textContent = "Test /health";
+    testBtn.style.marginLeft = "8px";
+    btn.after(testBtn);
 
-  btn.onclick = async () => {
-    out.textContent = "Thinking…";
-    try {
-      const r = await fetch(WORKER_CHAT_URL, {
-        method: "POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({ prompt: input.value })
-      });
+    testBtn.onclick = async () => {
+      out.textContent = "Testing /health…";
+      try {
+        const r = await fetch(WORKER_HEALTH_URL, { method: "GET" });
+        const text = await r.text();
+        out.textContent = "HEALTH HTTP " + r.status + "\n\n" + text;
+      } catch (e) {
+        out.textContent = "HEALTH failed:\n" + String(e);
+      }
+    };
 
-      const text = await r.text();
-      out.textContent = "CHAT HTTP " + r.status + "\n\n" + text;
-    } catch (e) {
-      out.textContent = "CHAT failed:\n" + String(e);
-    }
-  };
-</script>
+    btn.onclick = async () => {
+      out.textContent = "Thinking…";
+      try {
+        const r = await fetch(WORKER_CHAT_URL, {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify({ prompt: input.value })
+        });
+
+        const text = await r.text();
+        out.textContent = "CHAT HTTP " + r.status + "\n\n" + text;
+      } catch (e) {
+        out.textContent = "CHAT failed:\n" + String(e);
+      }
+    };
+  </script>
+</body>
+</html>
+
