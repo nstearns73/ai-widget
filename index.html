@@ -1,46 +1,70 @@
-<script>
-  const WORKER_BASE = "https://square-fog-677a.swaydargument.workers.dev";
-  const HEALTH = WORKER_BASE + "/health";
-  const CHAT = WORKER_BASE + "/chat";
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI Widget</title>
+  <style>
+    body { font-family: system-ui; padding: 12px; max-width: 900px; }
+    textarea { width: 100%; }
+    pre { white-space: pre-wrap; background:#f6f6f6; padding:12px; border-radius:10px; }
+    button { padding: 8px 12px; }
+  </style>
+</head>
 
-  const btn = document.getElementById("b");
-  const out = document.getElementById("out");
-  const input = document.getElementById("p");
+<body>
+  <h3>DeepSeek test</h3>
+  <textarea id="p" rows="5">Give me a 2-sentence explanation of logos.</textarea>
+  <br><br>
+  <button id="b">Ask</button>
+  <pre id="out"></pre>
 
-  const testBtn = document.createElement("button");
-  testBtn.textContent = "Test /health";
-  testBtn.style.marginLeft = "8px";
-  btn.after(testBtn);
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const WORKER_BASE = "https://square-fog-677a.swaydargument.workers.dev";
+      const HEALTH = WORKER_BASE + "/health";
+      const CHAT = WORKER_BASE + "/chat";
 
-  function log(s) {
-    out.textContent = s;
-  }
+      const btn = document.getElementById("b");
+      const out = document.getElementById("out");
+      const input = document.getElementById("p");
 
-  testBtn.onclick = async () => {
-    log("HEALTH: starting fetch to:\n" + HEALTH);
-    try {
-      const r = await fetch(HEALTH);
-      const text = await r.text();
-      log("HEALTH: HTTP " + r.status + "\n\n" + text);
-    } catch (e) {
-      log("HEALTH: failed\n" + String(e));
-    }
-  };
+      const testBtn = document.createElement("button");
+      testBtn.textContent = "Test /health";
+      testBtn.style.marginLeft = "8px";
+      btn.after(testBtn);
 
-  btn.onclick = async () => {
-    log("CHAT: starting fetch to:\n" + CHAT);
-    try {
-      const r = await fetch(CHAT, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain; charset=utf-8" },
-        body: input.value
-      });
-      const text = await r.text();
-      log("CHAT: HTTP " + r.status + "\n\n" + text);
-    } catch (e) {
-      log("CHAT: failed\n" + String(e));
-    }
-  };
-</script>
+      const log = (s) => { out.textContent = s; };
+
+      testBtn.onclick = async () => {
+        log("HEALTH: starting fetch to:\n" + HEALTH);
+        try {
+          const r = await fetch(HEALTH);
+          const text = await r.text();
+          log("HEALTH: HTTP " + r.status + "\n\n" + text);
+        } catch (e) {
+          log("HEALTH: failed\n" + String(e));
+        }
+      };
+
+      btn.onclick = async () => {
+        log("CHAT: starting fetch to:\n" + CHAT);
+        try {
+          const r = await fetch(CHAT, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain; charset=utf-8" },
+            body: input.value
+          });
+          const text = await r.text();
+          log("CHAT: HTTP " + r.status + "\n\n" + text);
+        } catch (e) {
+          log("CHAT: failed\n" + String(e));
+        }
+      };
+    });
+  </script>
+</body>
+</html>
+
 
 
